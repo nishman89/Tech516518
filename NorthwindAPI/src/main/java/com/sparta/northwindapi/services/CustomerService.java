@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class CustomerService {
@@ -20,6 +21,9 @@ public class CustomerService {
 
     @Autowired
     public CustomerService(CustomerRepository customerRepository) {
+        if(customerRepository == null){
+            throw new IllegalArgumentException("Repository cannot be null");
+        }
         this.customerRepository = customerRepository;
     }
     /**
@@ -38,13 +42,8 @@ public class CustomerService {
      * @return the customer if found, or null if not found
      */
     public Customer getCustomerByID(String id) {
-        if (id.length() > 5) {
-            throw new IllegalArgumentException("Can't have ID longer than 5 characters");
-        } else {
-            return customerRepository.findById(id).orElse(null);
-        }
-
-        // Optional<Customer>
+            return customerRepository.findById(id)
+                    .orElseThrow(() -> new NoSuchElementException("Customer not found"));
     }
         /**
          * Saves a new customer or updates an existing customer in the database.
@@ -53,7 +52,26 @@ public class CustomerService {
          * @return the saved customer
          */
         public Customer saveCustomer(Customer customer) {
+            if(customer == null){
+                throw new IllegalArgumentException("Customer cannot be null");
+            }
             return customerRepository.save(customer);
         }
+
+    public boolean deleteCustomer(String id) {
+        if (customerRepository.existsById(id)) {
+            customerRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public Customer updateCustomer(Customer customer) {
+        if (customerRepository.existsById(customer.getCustomerID())) {
+            return customerRepository.save(customer);
+        } else {
+            throw new IllegalArgumentException("Customer with ID " + customer.getCustomerID() + " does not exist.");
+        }
+    }
 
 }
