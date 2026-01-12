@@ -1,10 +1,9 @@
 package com.sparta.northwindapi;
 
-import com.sparta.northwindapi.models.entities.Customer;
+import com.sparta.northwindapi.entities.Customer;
 import com.sparta.northwindapi.repository.CustomerRepository;
 import com.sparta.northwindapi.services.CustomerService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -71,6 +70,7 @@ public class CustomerServiceTests {
         Assertions.assertNotNull(result, "Customer should not be null");
         Assertions.assertEquals("MANDA", result.getCustomerID(), "Customer ID should match");
     }
+
     @Test
     @DisplayName("Get Customer Unhappy Path - no such element exception")
     public void findCustomerUnhappyPathTest() {
@@ -122,4 +122,5 @@ public class CustomerServiceTests {
         Mockito.verify(mockRepository).save(customer);
         Mockito.verifyNoMoreInteractions(mockRepository);
     }
+
 }

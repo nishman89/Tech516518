@@ -1,6 +1,6 @@
 package com.sparta.northwindapi.services;
 
-import com.sparta.northwindapi.models.entities.Customer;
+import com.sparta.northwindapi.entities.Customer;
 import com.sparta.northwindapi.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,9 @@ public class CustomerService {
         }
         this.customerRepository = customerRepository;
     }
+
+
+
     /**
      * Retrieves all customers from the database.
      *
@@ -42,8 +45,10 @@ public class CustomerService {
      * @return the customer if found, or null if not found
      */
     public Customer getCustomerByID(String id) {
-            return customerRepository.findById(id)
+
+            return customerRepository.findById(id) //findById to return an emptpty optional (Optional<Customer>) Customer = null
                     .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+
     }
         /**
          * Saves a new customer or updates an existing customer in the database.

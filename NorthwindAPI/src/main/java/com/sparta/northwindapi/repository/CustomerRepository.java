@@ -1,6 +1,6 @@
 package com.sparta.northwindapi.repository;
 
-import com.sparta.northwindapi.models.entities.Customer;
+import com.sparta.northwindapi.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

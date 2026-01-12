@@ -1,4 +1,4 @@
-package com.sparta.northwindapi.models.entities;
+package com.sparta.northwindapi.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
