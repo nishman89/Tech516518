@@ -43,4 +43,27 @@ public class CustomerController {
         return ResponseEntity.status(201).body(savedCustomer);
     }
 
+    @Operation(summary = "Update a customer", description = "Modify an existing customer's details in the database")
+    @PutMapping("/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody Customer customer) {
+        customer.setCustomerID(id);
+        try {
+            Customer updatedCustomer = service.updateCustomer(customer);
+            return ResponseEntity.ok(updatedCustomer);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Operation(summary = "Delete a customer", description = "Remove a customer from the database using their unique ID")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
+        boolean deleted = service.deleteCustomer(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
