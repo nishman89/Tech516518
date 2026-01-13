@@ -1,10 +1,13 @@
 package com.sparta.northwindapi.services;
 
+import com.sparta.northwindapi.dtos.CustomerDTO;
+import com.sparta.northwindapi.dtos.CustomerMapper;
 import com.sparta.northwindapi.entities.Customer;
 import com.sparta.northwindapi.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -12,6 +15,7 @@ import java.util.NoSuchElementException;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     /**
      * Constructor-based dependency injection for CustomerRepository.
@@ -20,11 +24,12 @@ public class CustomerService {
      */
 
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
-        if(customerRepository == null){
-            throw new IllegalArgumentException("Repository cannot be null");
+    public CustomerService(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+        if(customerRepository == null || customerMapper == null){
+            throw new IllegalArgumentException("Repository and Mapper cannot be null");
         }
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
 
@@ -34,8 +39,17 @@ public class CustomerService {
      *
      * @return a list of all customers
      */
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getAllCustomers() {
+//        ArrayList<CustomerDTO> customerDtos = new ArrayList<>();
+//        List<Customer> customers = customerRepository.findAll();
+//
+//        for(Customer customer :  customers){
+//            CustomerDTO customerDto = customerMapper.toDTO(customer);
+//            customerDtos.add(customerDto);
+//        }
+//        return customerDtos;
+
+        return customerRepository.findAll().stream().map(customerMapper::toDTO).toList();
     }
 
     /**
@@ -73,6 +87,7 @@ public class CustomerService {
 
     public Customer updateCustomer(Customer customer) {
         if (customerRepository.existsById(customer.getCustomerID())) {
+
             return customerRepository.save(customer);
         } else {
             throw new IllegalArgumentException("Customer with ID " + customer.getCustomerID() + " does not exist.");

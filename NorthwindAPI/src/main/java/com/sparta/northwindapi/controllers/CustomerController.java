@@ -1,5 +1,6 @@
 package com.sparta.northwindapi.controllers;
 
+import com.sparta.northwindapi.dtos.CustomerDTO;
 import com.sparta.northwindapi.entities.Customer;
 import com.sparta.northwindapi.services.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/customers")
@@ -18,8 +20,8 @@ public class CustomerController {
     }
     @Operation(summary = "Get all customers", description = "Retrieve list of all customers")
     @GetMapping( "/")
-    public ResponseEntity<List<Customer>> getAllCustomers(){
-        List<Customer> customers = service.getAllCustomers();
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers(){
+        List<CustomerDTO> customers = service.getAllCustomers();
         return  ResponseEntity.ok(customers);
     }
 
@@ -27,10 +29,10 @@ public class CustomerController {
     @Operation(summary = "Get a customer by ID", description = "Retrieve a customer from the database using their unique ID")
     public ResponseEntity<Customer> getCustomerById(@PathVariable  String id){
 
-        Customer customer = service.getCustomerByID(id);
-        if(customer != null){
+        try{
+            Customer customer = service.getCustomerByID(id);
             return ResponseEntity.ok(customer);
-        } else{
+        } catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
         }
 
