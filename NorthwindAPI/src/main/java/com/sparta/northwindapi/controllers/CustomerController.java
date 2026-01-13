@@ -15,49 +15,52 @@ import java.util.NoSuchElementException;
 public class CustomerController {
 
     private final CustomerService service;
+
     public CustomerController(CustomerService service){
+
         this.service = service;
     }
-    @Operation(summary = "Get all customers", description = "Retrieve list of all customers")
-    @GetMapping( "/")
-    public ResponseEntity<List<CustomerDTO>> getAllCustomers(){
+
+
+    @Operation(summary = "Get all customers", description = "Retrieve a list of all customers")
+    @GetMapping(value = "/")
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         List<CustomerDTO> customers = service.getAllCustomers();
-        return  ResponseEntity.ok(customers);
+        return ResponseEntity.ok(customers);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get a customer by ID", description = "Retrieve a customer from the database using their unique ID")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable  String id){
 
-        try{
-            Customer customer = service.getCustomerByID(id);
+    @Operation(summary = "Get a customer by ID", description = "Retrieve a customer from the database using their unique ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable String id) {
+        CustomerDTO customer = service.getCustomerById(id);
+        if (customer != null) {
             return ResponseEntity.ok(customer);
-        } catch (NoSuchElementException e){
+        } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
-    @PostMapping("/")
     @Operation(summary = "Add a new customer", description = "Create a new customer in the database")
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer){
-        Customer savedCustomer = service.saveCustomer(customer);
+    @PostMapping
+    public ResponseEntity<CustomerDTO> addCustomer(@RequestBody CustomerDTO customerDTO) {
+        CustomerDTO savedCustomer = service.saveCustomer(customerDTO);
         return ResponseEntity.status(201).body(savedCustomer);
     }
 
-    @Operation(summary = "Update a customer", description = "Modify an existing customer's details in the database")
+    @Operation(summary = "Update a customer", description = "Update an existing customer in the database")
     @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable String id, @RequestBody Customer customer) {
-        customer.setCustomerID(id);
+    public ResponseEntity<CustomerDTO> updateCustomer(@PathVariable String id, @RequestBody CustomerDTO customerDTO) {
+        customerDTO.setCustomerID(id);
         try {
-            Customer updatedCustomer = service.updateCustomer(customer);
+            CustomerDTO updatedCustomer = service.updateCustomer(customerDTO);
             return ResponseEntity.ok(updatedCustomer);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @Operation(summary = "Delete a customer", description = "Remove a customer from the database using their unique ID")
+    @Operation(summary = "Delete a customer", description = "Delete a customer from the database using their unique ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable String id) {
         boolean deleted = service.deleteCustomer(id);

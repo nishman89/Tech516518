@@ -52,30 +52,18 @@ public class CustomerService {
         return customerRepository.findAll().stream().map(customerMapper::toDTO).toList();
     }
 
-    /**
-     * Retrieves a customer by their ID.
-     *
-     * @param id the ID of the customer
-     * @return the customer if found, or null if not found
-     */
-    public Customer getCustomerByID(String id) {
-
-            return customerRepository.findById(id) //findById to return an emptpty optional (Optional<Customer>) Customer = null
-                    .orElseThrow(() -> new NoSuchElementException("Customer not found"));
-
+    public CustomerDTO getCustomerById(String id) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Customer not found"));
+        return customerMapper.toDTO(customer);
     }
-        /**
-         * Saves a new customer or updates an existing customer in the database.
-         *
-         * @param customer the customer to save
-         * @return the saved customer
-         */
-        public Customer saveCustomer(Customer customer) {
-            if(customer == null){
-                throw new IllegalArgumentException("Customer cannot be null");
-            }
-            return customerRepository.save(customer);
-        }
+
+    // Controller passes DTO; service maps + persists
+    public CustomerDTO saveCustomer(CustomerDTO customerDTO) {
+        Customer entity = customerMapper.toEntity(customerDTO);
+        Customer saved = customerRepository.save(entity);
+        return customerMapper.toDTO(saved);
+    }
 
     public boolean deleteCustomer(String id) {
         if (customerRepository.existsById(id)) {
@@ -85,13 +73,14 @@ public class CustomerService {
         return false;
     }
 
-    public Customer updateCustomer(Customer customer) {
-        if (customerRepository.existsById(customer.getCustomerID())) {
-
-            return customerRepository.save(customer);
-        } else {
-            throw new IllegalArgumentException("Customer with ID " + customer.getCustomerID() + " does not exist.");
+    public CustomerDTO updateCustomer(CustomerDTO customerDTO) {
+        String id = customerDTO.getCustomerID();
+        if (!customerRepository.existsById(id)) {
+            throw new NoSuchElementException("Customer with ID " + id + " does not exist.");
         }
+        Customer entity = customerMapper.toEntity(customerDTO);
+        Customer saved = customerRepository.save(entity);
+        return customerMapper.toDTO(saved);
     }
 
 }
