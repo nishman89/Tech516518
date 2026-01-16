@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head('Customer Form')"></head>
+
+<body>
+<div class="container mt-4">
+
+    <div class="card">
+        <div class="card-header">
+            <h2 class="mb-0">Customer</h2>
+        </div>
+
+        <div class="card-body">
+            <form th:object="${customer}"
+                  th:action="${customer.customerID} != null
+                        ? @{/customers/{id}(id=${customer.customerID})}
+                        : @{/customers}"
+                  method="post">
+
+                <div class="mb-3">
+                    <label class="form-label">ID</label>
+                    <input class="form-control"
+                           th:field="*{customerID}"
+                           th:readonly="${customer.customerID} != null"/>
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('customerID')}"
+                         th:errors="*{customerID}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Company</label>
+                    <input class="form-control" th:field="*{companyName}"/>
+                    <div class="text-danger"
+                         th:if="${#fields.hasErrors('companyName')}"
+                         th:errors="*{companyName}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contact</label>
+                    <input class="form-control" th:field="*{contactName}"/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">City</label>
+                    <input class="form-control" th:field="*{city}"/>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <a class="btn btn-secondary" th:href="@{/customers}">Cancel</a>
+
+                    <div class="d-flex gap-2">
+                        <!-- Delete only shown when editing -->
+                        <form th:if="${customer.customerID != null}"
+                              th:action="@{/customers/{id}/delete(id=${customer.customerID})}"
+                              method="post">
+                            <button class="btn btn-danger"
+                                    onclick="return confirm('Delete this customer?')">
+                                Delete
+                            </button>
+                        </form>
+
+                        <button class="btn btn-success" type="submit">Save</button>
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -3,11 +3,10 @@ package com.sparta.northwindapi.services;
 import com.sparta.northwindapi.dtos.CustomerDTO;
 import com.sparta.northwindapi.dtos.CustomerMapper;
 import com.sparta.northwindapi.entities.Customer;
-import com.sparta.northwindapi.repository.CustomerRepository;
+import com.sparta.northwindapi.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 

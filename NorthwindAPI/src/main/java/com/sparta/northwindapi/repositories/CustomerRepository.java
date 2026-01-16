@@ -1,4 +1,4 @@
-package com.sparta.northwindapi.repository;
+package com.sparta.northwindapi.repositories;
 
 import com.sparta.northwindapi.entities.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

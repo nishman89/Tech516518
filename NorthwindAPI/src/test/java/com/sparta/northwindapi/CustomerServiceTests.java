@@ -3,7 +3,7 @@ package com.sparta.northwindapi;
 import com.sparta.northwindapi.dtos.CustomerDTO;
 import com.sparta.northwindapi.dtos.CustomerMapper;
 import com.sparta.northwindapi.entities.Customer;
-import com.sparta.northwindapi.repository.CustomerRepository;
+import com.sparta.northwindapi.repositories.CustomerRepository;
 import com.sparta.northwindapi.services.CustomerService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +12,6 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public class CustomerServiceTests {
 

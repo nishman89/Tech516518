@@ -12,6 +12,11 @@ import java.util.List;
 public interface BookRepository extends JpaRepository<Book, Integer> {
     List<Book> findByTitleContainingIgnoreCase(String title);
 
-
+    @Query("""
+    SELECT b
+    FROM Book b
+    WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))
+""")
+    List<Book> findByTitleContainingIgnoreCase_alt(@Param("title") String title);
 
 }
